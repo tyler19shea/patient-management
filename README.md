@@ -40,14 +40,16 @@ Handles the operations related to patient data management:
 
 Copy code
 ```
-git clone https://github.com/yourusername/patient-management-system.git
+git clone https://github.com/tyler19shea/patient-management-system.git
 cd patient-management-system
 ```
 # Ensure the CSV file (patient-management.csv) exists:
 
+Place this at the top of the csv file. 
 Copy:
 ```
 Name,ID,Diagnosis,Insurance,Visits,Amount-Due
+
 ```
 # Run the Program:
 Copy code:
