@@ -1,28 +1,6 @@
 import sqlite3
-import pandas as pd
+from patient import Patient
 from random import randint
-
-class Patient:
-    def __init__(self, name, id, diagnosis, insurance, visits, amount_due) -> None:
-        self.name = name
-        self.id = id
-        self.diagnosis = diagnosis
-        self.insurance = insurance
-        self.visits = visits
-        self.amount_due = amount_due
-
-    def __str__(self) -> str:
-        return f'{self.name},{self.id},{self.diagnosis},{self.insurance},{self.visits},{self.amount_due}\n'
-    
-    def visit_increase(self):
-        if self.insurance == 'anthem':
-            self.amount_due += 20
-        elif self.insurance == 'medicare':
-            self.amount_due += 10
-        else:
-            self.amount_due += 60
-        self.visits += 1
-
 
 class PatientManagement:
     def __init__(self, db_name):
@@ -63,12 +41,12 @@ class PatientManagement:
 
     def id_generator(self):
         patient_ids = self.get_all_ids()
-        number = randint(1, 10)
+        number = randint(1, 10000)
         count = 1
-        while number in patient_ids and count < 10:
-            number = randint(1, 10)
+        while number in patient_ids and count < 10000:
+            number = randint(1, 10000)
             count += 1
-        if count >= 10:
+        if count >= 10000:
             print('Invalid amount of ids available!')
             return None
         else:
@@ -96,7 +74,7 @@ class PatientManagement:
             self.conn.execute("INSERT INTO patients (name, id, diagnosis, insurance, visits, amount_due) VALUES (?, ?, ?, ?, ?, ?)",
                               (patient.name, patient.id, patient.diagnosis, patient.insurance, patient.visits, patient.amount_due))
 
-    def update_data(self, id, update_item, update_value):
+    def update_patient_data(self, id, update_item, update_value):
         with self.conn:
             cursor = self.conn.execute("SELECT id FROM patients WHERE id=?", (id,))
             if cursor.fetchone():
@@ -176,7 +154,7 @@ class PatientManagement:
                 id = input('What is the ID of the Patient you would like to update: ')
                 update_item = input('What is the item you wish to update (name, diagnosis, insurance, visits, amount_due): ')
                 update_value = input(f'What is the new {update_item}: ')
-                self.update_data(id, update_item, update_value)
+                self.update_patient_data(id, update_item, update_value)
             elif selection == 5:
                 id = input('What is the Patient\'s ID that visited: ')
                 self.patient_visit(id)
