@@ -1,30 +1,37 @@
 # patient-management
-This project keeps track of patient data including their name, diagnosis, insurance, visits, and the amount due to the healthcare system. It saves its information into a sqlite database to keep track of the data. It also utilizes Object-Oriented Programming (OOP) to allow for a modular, maintainable, and scalable design.
+This project keeps track of patient data including their name, diagnosis, insurance, visits, and the amount due to the healthcare system. It saves its information into an SQLite database to keep track of the data. It also utilizes Object-Oriented Programming (OOP) principles and provides a graphical user interface (GUI) using Tkinter.
 
 # Features
-- Add New Patients: Input details for a new patient and store them in the system.
-- Update Patient Data: Modify existing patient information such as name, diagnosis, insurance, visits, and amount due.
-- Track Patient Visits: Increase the number of visits and update the amount due based on the patient's insurance type.
-- Remove Patients: Delete patient records from the system.
-- View All Patient Data: Retrieve and display all patient data stored in the sqlite database.
+- Patient Data Management: Add, update, delete, and view patient data.
+- Database Storage: Utilizes SQLite for persistent storage of patient information.
+- GUI: User-friendly graphical interface using Tkinter.
+- Visit Tracking: Automatically updates the number of visits and the amount due based on insurance type.
+- Unique ID Generation: Generates unique IDs for new patients.
+
+# Project Structure
+- patient.py: Contains the 'Patient' class, representing patient data.
+- database.py: Contains the 'PatientManagement' class, which handles all database interactions such as adding, updating, fetching, and removing patient data.
+- gui.py: Contains the 'PatientMangementGUI' class, which handlws the Tkinter GUI setup and user interactions.
+- main.py: Entry point of the application, initializing the 'PatientManagementGUI' with the SQLite database file.
 
 # Classes
 # Patient
 Represents a patient with the following attributes:
-
 - name: Name of the patient.
 - id: Unique identifier for the patient.
 - diagnosis: Diagnosis of the patient.
 - insurance: Insurance type of the patient.
 - visits: Number of visits made by the patient.
 - amount_due: Amount due by the patient.
+  
 # Methods:
-
 - __str__: Returns a string representation of the patient's data.
 - visit_increase: Increases the number of visits and updates the amount due based on the insurance type.
+  
 # PatientManagement
 Handles the operations related to patient data management:
-
+Methods:
+- '__init__': Initializes the database connnection and creates the patients table if it does not exist.
 - fetch_all_data: Reads patient data from the sqlite database.
 - display_headers: Displays headers for the patient data. 
 - get_all_ids: Retrieves all patient IDs from the data.
@@ -36,7 +43,19 @@ Handles the operations related to patient data management:
 - patient_visit: Records a new visit for a patient and updates their data.
 - patient_payment: Updates the amount due for a specific patient based on ID.
 - remove_patient: Removes a patient's data from the database.
-- main_menu: Provides a menu for user interaction to perform various operations.
+  
+# PatientManagementGUI
+Handles the graphical user interface using Tkinter.
+Methods:
+- '__init__': Initializes the GUI and the PatientManagement instance.
+- create_gui: Sets up the GUI layout and event handlers.
+- display_data: Displays all patient data.
+- display_single_data: Displays single patient data based on id.
+- add_new_patient: Prompts the user to add a new patient.
+- update_patient_data: Prompts the user to update a patient's data.
+- record_patient_visit: Records a new visit for a patient.
+- patient_pay: Updates the amount due based on a payment.
+- remove_patient_data: Prompts the user to remove a patient.
 # Usage
 # Clone the Repository:
 
@@ -45,35 +64,20 @@ Copy code
 git clone https://github.com/tyler19shea/patient-management.git
 cd patient-management
 ```
-# Run the Program:
-Copy code:
-```
-python patient_management.py
-```
-# Interact with the Menu:
+# How to Run the Program:
+- Ensure you have Python installed on your system.
+- Install the required libraries: 
+```pip install tk```
+- Clone this repository or download the source code.
+- Run the main.py file to start the application: 
+```python main.py```
 
-- See Patients Data: View all stored patient information.
-- See Single Patients Data: View specific patient information.
-- Add New Patient: Input details for a new patient.
-- Update Patient Data: Modify existing patient information.
-- Patient Visit: Record a new visit for a patient.
-- Patient Payment: Alter amount due because of payment by patient.
-- Remove Patient: Delete a patient record.
-- Exit: Exit the application.
-# Example:
-```
-Welcome to patient management!! What would you like to do?
-      1. See Patients Data
-      2. See Single Patient
-      3. Add New Patient
-      4. Update Patient Data
-      5. Patient Visit
-      6. Patient Payment
-      7. Remove Patient
-      8. Exit
-What would you like to do (type number): 3
-What is the patient's name: John Doe
-What is the patient's Diagnosis: Flu
-What is the patient's Insurance: anthem
-New patient added successfully!
-```
+# Usage
+- See Patients Data: View all patient records stored in the database.
+- See Single Patient Data: View specific patient record in the database.
+- Add New Patient: Add a new patient by providing their name, diagnosis, and insurance type.
+- Update Patient Data: Update a specific attribute for an existing patient.
+- Add Patient Visit: Updates the patients visit and increases the amount due for the patient.
+- Add Patient Payment: Update the amount due by entering the amount the patient paid.
+- New Patient Visit: Record a new visit for a patient, which updates their number of visits and the amount due.
+- Remove Patient: Remove a patient from the database
