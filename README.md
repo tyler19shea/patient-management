@@ -1,5 +1,5 @@
 # patient-management
-This project keeps track of patient data including their name, diagnosis, insurance, visits, and the amount due to the healthcare system. It saves its information into an SQLite database to keep track of the data. It also utilizes Object-Oriented Programming (OOP) principles and provides a graphical user interface (GUI) using Tkinter.
+This project keeps track of patient data including their first and last name, date of birth, diagnosis, insurance, visits, and the amount due to the healthcare system. It saves its information into an SQLite database to keep track of the data. It also utilizes Object-Oriented Programming (OOP) principles and provides a graphical user interface (GUI) using Tkinter.
 
 # Features
 - Patient Data Management: Add, update, delete, and view patient data.
@@ -17,8 +17,10 @@ This project keeps track of patient data including their name, diagnosis, insura
 # Classes
 # Patient
 Represents a patient with the following attributes:
-- name: Name of the patient.
+- first name: First name of the patient.
+- last name: Last name of the patient.
 - id: Unique identifier for the patient.
+- Date of Birth: Birthday of the patient.
 - diagnosis: Diagnosis of the patient.
 - insurance: Insurance type of the patient.
 - visits: Number of visits made by the patient.
