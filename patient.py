@@ -1,14 +1,16 @@
 class Patient:
-    def __init__(self, name, id, diagnosis, insurance, visits, amount_due) -> None:
-        self.name = name
+    def __init__(self, first_name, last_name, id, birthday, diagnosis, insurance, visits, amount_due) -> None:
+        self.first_name = first_name
+        self.last_name = last_name
         self.id = id
+        self.birthday = birthday
         self.diagnosis = diagnosis
         self.insurance = insurance
         self.visits = visits
         self.amount_due = amount_due
 
     def __str__(self) -> str:
-        return f'{self.name},{self.id},{self.diagnosis},{self.insurance},{self.visits},{self.amount_due}\n'
+        return f'{self.id}, {self.first_name}, {self.last_name}, {self.birthday}, {self.diagnosis},{self.insurance},{self.visits},{self.amount_due}\n'
     
     def visit_increase(self):
         if self.insurance == 'anthem':

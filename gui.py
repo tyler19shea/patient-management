@@ -11,7 +11,7 @@ class PatientManagementGUI:
     def create_gui(self):
         root = tk.Tk()
         root.title("Patient Management System")
-        root.minsize(500, 500)
+        root.minsize(300, 300)
 
         tk.Button(root, text="See Patients Data", command=self.display_data).pack(fill=tk.X)
         tk.Button(root, text="See Single Patients Data", command=self.display_single_data).pack(fill=tk.X)
@@ -27,7 +27,7 @@ class PatientManagementGUI:
     def display_data(self):
         data = self.patient_management.fetch_all_data()
         if data:
-            display_text = '\n'.join([f"\nID: {row[0]} \nName: {row[1]} \nDiagnosis: {row[2]} \nInsurance: {row[3]} \nVisits: {row[4]} \nAmount Due: {row[5]}" for row in data])
+            display_text = '\n'.join([f"\nID: {row[0]} \nName: {row[1]} {row[2]} \nDOB: {row[3]} \nDiagnosis: {row[4]} \nInsurance: {row[5]} \nVisits: {row[6]} \nAmount Due: {row[7]}" for row in data])
         else:
             display_text = "No data found"
         messagebox.showinfo('Patient Data', display_text)
@@ -45,12 +45,18 @@ class PatientManagementGUI:
         messagebox.showinfo('Patient Data', display_text)
     
     def add_new_patient(self):
-        name = simpledialog.askstring("Input","What is the new Patients Name?")
-        if not name:
+        first_name = simpledialog.askstring("Input","What is the new Patients First Name?")
+        if not first_name:
+            return
+        last_name = simpledialog.askstring("Input", "What is the new Patients Last Name?")
+        if not last_name:
             return
         id = self.patient_management.id_generator()
         if not id:
             messagebox.showerror('Error', 'Invalid amount of IDs available!')
+            return
+        birthday = simpledialog.askstring("Input", "What is their birthday? (MM/DD/YYYY)")
+        if not birthday:
             return
         diagnosis = simpledialog.askstring("Input", "What is the new Patients Diagnosis?")
         if not diagnosis:
@@ -63,9 +69,9 @@ class PatientManagementGUI:
             amount_due = 10
         else:
             amount_due = 60
-        patient = Patient(name, id, diagnosis, insurance, visits, amount_due)
+        patient = Patient(first_name, last_name, id, birthday, diagnosis, insurance, visits, amount_due)
         self.patient_management.add_patient_data(patient)
-        messagebox.showinfo('Success', f'Patient {name} added with an id of {id} successfully!')
+        messagebox.showinfo('Success', f'Patient {first_name} {last_name} added with an id of {id} successfully!')
     
     def update_patient_data(self):
         id = simpledialog.askinteger("Input", "What is the ID of the Patient you would like to update?")

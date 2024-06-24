@@ -13,7 +13,9 @@ class PatientManagement:
             self.conn.execute("""
                 CREATE TABLE IF NOT EXISTS patients (
                     id INTEGER PRIMARY KEY,
-                    name TEXT NOT NULL,
+                    first_name TEXT NOT NULL,
+                    last_name TEXT NOT NULL,
+                    DOB DATE NOT NULL,
                     diagnosis TEXT NOT NULL,
                     insurance TEXT NOT NULL,
                     visits INTEGER NOT NULL,
@@ -53,8 +55,8 @@ class PatientManagement:
 
     def add_patient_data(self, patient):
         with self.conn:
-            self.conn.execute("INSERT INTO patients (name, id, diagnosis, insurance, visits, amount_due) VALUES (?, ?, ?, ?, ?, ?)",
-                              (patient.name, patient.id, patient.diagnosis, patient.insurance, patient.visits, patient.amount_due))
+            self.conn.execute("INSERT INTO patients (first_name, last_name, id, DOB, diagnosis, insurance, visits, amount_due) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                              (patient.first_name, patient.last_name, patient.id, patient.birthday, patient.diagnosis, patient.insurance, patient.visits, patient.amount_due))
 
     def update_patient_data(self, id, update_item, update_value):
         with self.conn:
