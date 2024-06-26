@@ -50,7 +50,7 @@ class PatientManagementGUI:
         id_entry.grid(row=0, column=1)
 
         def display_single_data():
-            id =  id_entry.get()
+            id =  int(id_entry.get())
             if id in self.patient_management.get_all_ids(): 
                 data = self.patient_management.get_patient_data(id)
                 if data:
