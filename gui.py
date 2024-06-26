@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import messagebox, simpledialog
+from tkinter import messagebox, simpledialog, ttk
 from patientManagement import PatientManagement
 from patient import Patient
 
@@ -9,40 +9,72 @@ class PatientManagementGUI:
         self.create_gui()
 
     def create_gui(self):
-        root = tk.Tk()
-        root.title("Patient Management System")
-        root.minsize(300, 300)
+        self.root = tk.Tk()
+        self.root.title("Patient Management System")
+        self.root.minsize(300, 300)
 
-        tk.Button(root, text="See Patients Data", command=self.display_data).pack(fill=tk.X)
-        tk.Button(root, text="See Single Patients Data", command=self.display_single_data).pack(fill=tk.X)
-        tk.Button(root, text="Add New Patient", command=self.add_new_patient).pack(fill=tk.X)
-        tk.Button(root, text="Update Patient Data", command=self.update_patient_data).pack(fill=tk.X)
-        tk.Button(root, text="Add Patient Visit", command=self.record_patient_visit).pack(fill=tk.X)
-        tk.Button(root, text="Patient Payment", command=self.patient_pay).pack(fill=tk.X)
-        tk.Button(root, text="Remove Patient", command=self.remove_patient_data).pack(fill=tk.X)
-        tk.Button(root, text="Exit", command=root.quit).pack(fill=tk.X)
+        ttk.Button(self.root, text="See Patients Data", command=self.display_data).pack(fill=tk.X, padx=5, pady=5)
+        ttk.Button(self.root, text="See Single Patients Data", command=self.display_single_data_window).pack(fill=tk.X, padx=5, pady=5)
+        ttk.Button(self.root, text="Add New Patient", command=self.add_new_patient).pack(fill=tk.X, padx=5, pady=5)
+        ttk.Button(self.root, text="Update Patient Data", command=self.update_patient_data).pack(fill=tk.X, padx=5, pady=5)
+        ttk.Button(self.root, text="Add Patient Visit", command=self.record_patient_visit).pack(fill=tk.X, padx=5, pady=5)
+        ttk.Button(self.root, text="Patient Payment", command=self.patient_pay).pack(fill=tk.X, padx=5, pady=5)
+        ttk.Button(self.root, text="Remove Patient", command=self.remove_patient_data).pack(fill=tk.X, padx=5, pady=5)
+        ttk.Button(self.root, text="Exit", command=self.root.quit).pack(fill=tk.X, padx=5, pady=5)
 
-        root.mainloop()
+        self.root.mainloop()
 
     def display_data(self):
         data = self.patient_management.fetch_all_data()
+        display_window = tk.Toplevel(self.root)
+        display_window.title("Patients Data")
+
         if data:
-            display_text = '\n'.join([f"\nID: {row[0]} \nName: {row[1]} {row[2]} \nDOB: {row[3]} \nDiagnosis: {row[4]} \nInsurance: {row[5]} \nVisits: {row[6]} \nAmount Due: {row[7]}" for row in data])
+            cols = ("ID", "First Name", "Last Name", "DOB", "Diagnosis", "Insurance", "Visits", "Amount Due")
+            tree = ttk.Treeview(display_window, columns=cols, show='headings')
+            for col in cols:
+                tree.heading(col, text=col)
+                tree.column(col, width=100)
+            for row in data:
+                tree.insert("", "end", values=row)
+            tree.pack(fill=tk.BOTH, expand=True)
         else:
-            display_text = "No data found"
-        messagebox.showinfo('Patient Data', display_text)
+            messagebox.showinfo('Patient Data', "No data found.")
     
-    def display_single_data(self):
-        id = simpledialog.askstring("Input", "What is the Patients ID?")
-        if id in self.patient_management.get_all_ids(): 
-            data = list(self.patient_management.get_patient_data(id))
-            if data:
-                display_text = f'ID: {data[0]} \nName: {data[1]} \nDiagnosis: {data[2]} \nInsurance: {data[3]} \nVisits: {data[4]} \nAmount Due: {data[5]}'
+    def display_single_data_window(self):
+        single_patient_window = tk.Toplevel(self.root)
+        single_patient_window.title("View Patient by ID")
+
+        tk.Label(single_patient_window, text="Patient ID:").grid(row=0, column=0)
+        id_entry = tk.Entry(single_patient_window)
+        id_entry.grid(row=0, column=1)
+
+        def display_single_data():
+            id =  int(id_entry.get())
+            if id in self.patient_management.get_all_ids(): 
+                data = self.patient_management.get_patient_data(id)
+                if data:
+                    result_window = tk.Toplevel(single_patient_window)
+                    result_window.title(f"Patient Data for {id}")
+                    cols = ("ID", "First Name", "Last Name", "DOB", "Diagnosis", "Insurance", "Visits", "Amount Due")
+                    tree = ttk.Treeview(result_window, columns=cols, show='headings')
+                    for col in cols:
+                        tree.heading(col, text=col)
+                        tree.column(col, width=100)
+                    tree.insert("", "end", values=data)
+                    tree.pack(fill=tk.BOTH, expand=True)
+                else:
+                    messagebox.showinfo("Patient Data", f"No data found for {id}")
             else:
-                display_text = f"No data found for {id}"
-        else:
-            display_text = f'{id} not found in database'
-        messagebox.showinfo('Patient Data', display_text)
+                messagebox.showerror("Error", f"{id} not found in database.")
+        ttk.Button(single_patient_window, text="Display Single Patient", command=display_single_data).grid(row=4, columnspan=2)
+        #     if data:
+        #         display_text = f'ID: {data[0]} \nName: {data[1]} \nDiagnosis: {data[2]} \nInsurance: {data[3]} \nVisits: {data[4]} \nAmount Due: {data[5]}'
+        #     else:
+        #         display_text = f"No data found for {id}"
+        # else:
+        #     display_text = f'{id} not found in database'
+        # messagebox.showinfo('Patient Data', display_text)
     
     def add_new_patient(self):
         first_name = simpledialog.askstring("Input","What is the new Patients First Name?")
