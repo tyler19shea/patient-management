@@ -81,7 +81,7 @@ class PatientManagement:
             cursor = self.conn.execute("SELECT * FROM patients WHERE id=?", (id,))
             row = cursor.fetchone()
             if row:
-                patient = Patient(row[1], row[0], row[2], row[3], row[4], row[5])
+                patient = Patient(row[1], row[0], row[2], row[3], row[4], row[5], row[6])
                 patient.visit_increase()
                 self.conn.execute("UPDATE patients SET visits = ?, amount_due = ? WHERE id = ?", 
                                   (patient.visits, patient.amount_due, id))
@@ -92,7 +92,7 @@ class PatientManagement:
     def patient_payment(self, id, amount_paid):
         row = self.get_patient_data(id)
         if row:
-            updated_amount = row[5] - amount_paid
+            updated_amount = row[-1] - amount_paid
             self.conn.execute("UPDATE patients SET amount_due = ? WHERE id = ?", 
                             (updated_amount, id))
             return True
@@ -106,4 +106,6 @@ class PatientManagement:
                 self.conn.execute("DELETE FROM patients WHERE id=?", (id,))
                 return True
             else:
-                return False
+                return False           
+
+

@@ -16,10 +16,10 @@ class PatientManagementGUI:
         ttk.Button(self.root, text="See Patients Data", command=self.display_data).pack(fill=tk.X, padx=5, pady=5)
         ttk.Button(self.root, text="See Single Patients Data", command=self.display_single_data_window).pack(fill=tk.X, padx=5, pady=5)
         ttk.Button(self.root, text="Add New Patient", command=self.add_new_patient).pack(fill=tk.X, padx=5, pady=5)
-        ttk.Button(self.root, text="Update Patient Data", command=self.update_patient_data).pack(fill=tk.X, padx=5, pady=5)
-        ttk.Button(self.root, text="Add Patient Visit", command=self.record_patient_visit).pack(fill=tk.X, padx=5, pady=5)
-        ttk.Button(self.root, text="Patient Payment", command=self.patient_pay).pack(fill=tk.X, padx=5, pady=5)
-        ttk.Button(self.root, text="Remove Patient", command=self.remove_patient_data).pack(fill=tk.X, padx=5, pady=5)
+        ttk.Button(self.root, text="Update Patient Data", command=self.update_patient_data_window).pack(fill=tk.X, padx=5, pady=5)
+        ttk.Button(self.root, text="Add Patient Visit", command=self.record_patient_visit_window).pack(fill=tk.X, padx=5, pady=5)
+        ttk.Button(self.root, text="Patient Payment", command=self.patient_pay_window).pack(fill=tk.X, padx=5, pady=5)
+        ttk.Button(self.root, text="Remove Patient", command=self.remove_patient_data_window).pack(fill=tk.X, padx=5, pady=5)
         ttk.Button(self.root, text="Exit", command=self.root.quit).pack(fill=tk.X, padx=5, pady=5)
 
         self.root.mainloop()
@@ -50,7 +50,7 @@ class PatientManagementGUI:
         id_entry.grid(row=0, column=1)
 
         def display_single_data():
-            id =  int(id_entry.get())
+            id =  id_entry.get()
             if id in self.patient_management.get_all_ids(): 
                 data = self.patient_management.get_patient_data(id)
                 if data:
@@ -67,88 +67,139 @@ class PatientManagementGUI:
                     messagebox.showinfo("Patient Data", f"No data found for {id}")
             else:
                 messagebox.showerror("Error", f"{id} not found in database.")
+
         ttk.Button(single_patient_window, text="Display Single Patient", command=display_single_data).grid(row=4, columnspan=2)
-        #     if data:
-        #         display_text = f'ID: {data[0]} \nName: {data[1]} \nDiagnosis: {data[2]} \nInsurance: {data[3]} \nVisits: {data[4]} \nAmount Due: {data[5]}'
-        #     else:
-        #         display_text = f"No data found for {id}"
-        # else:
-        #     display_text = f'{id} not found in database'
-        # messagebox.showinfo('Patient Data', display_text)
     
     def add_new_patient(self):
-        first_name = simpledialog.askstring("Input","What is the new Patients First Name?")
-        if not first_name:
-            return
-        last_name = simpledialog.askstring("Input", "What is the new Patients Last Name?")
-        if not last_name:
-            return
-        id = self.patient_management.id_generator()
-        if not id:
-            messagebox.showerror('Error', 'Invalid amount of IDs available!')
-            return
-        birthday = simpledialog.askstring("Input", "What is their birthday? (MM/DD/YYYY)")
-        if not birthday:
-            return
-        diagnosis = simpledialog.askstring("Input", "What is the new Patients Diagnosis?")
-        if not diagnosis:
-            return
-        insurance = simpledialog.askstring("Input", "What is the new Patient\'s Insurance").lower()
-        visits = 1
-        if insurance == 'anthem':
-            amount_due = 20
-        elif insurance == 'medicare':
-            amount_due = 10
-        else:
-            amount_due = 60
-        patient = Patient(first_name, last_name, id, birthday, diagnosis, insurance, visits, amount_due)
-        self.patient_management.add_patient_data(patient)
-        messagebox.showinfo('Success', f'Patient {first_name} {last_name} added with an id of {id} successfully!')
-    
-    def update_patient_data(self):
-        id = simpledialog.askinteger("Input", "What is the ID of the Patient you would like to update?")
-        if not id:
-            return
-        update_item = simpledialog.askstring("Input", "What is the item you wish to update (name, diagnosis, insurance, visits, amount_due)?").lower()
-        if not update_item or update_item not in ['name', 'diagnosis', 'insurance', 'visits', 'amount_due']:
-            return
-        update_value = simpledialog.askstring("Input", f"What is the new {update_item}")
-        if not update_value:
-            return
-        if self.patient_management.update_patient_data(id, update_item, update_value):
-            messagebox.showinfo('Success', f'Patient with ID {id} has been updated.')
-        else:
-            messagebox.showerror('Error', f'ID {id} not in Database!')
-    
-    def record_patient_visit(self):
-        id = simpledialog.askstring("Input", "Whats the ID of the Patient?")
-        if not id:
-            return
-        if self.patient_management.patient_visit(id):
-            messagebox.showinfo('Success', f'Patient with ID {id} has been updated.')
-        else:
-            messagebox.showerror('Error', f'ID {id} not in Database!')
+        add_window = tk.Toplevel(self.root)
+        add_window.title("Add New Patient")
 
-    def patient_pay(self):
-        id = simpledialog.askstring("Input", "Whats the ID of the Patient that paid?")
-        if not id:
-            return
-        amount_paid = simpledialog.askfloat("Input", "How much was paid?")
-        if not amount_paid:
-            return
-        if self.patient_management.patient_payment(id, amount_paid):
-            messagebox.showinfo("Success", f"Patient with ID {id} has been updated.")
-        else:
-            messagebox.showerror("Error", f"ID {id} not in database!")
+        tk.Label(add_window, text="First Name:").grid(row=0, column=0)
+        first_name_entry = tk.Entry(add_window)
+        first_name_entry.grid(row=0, column=1)
+
+        tk.Label(add_window, text="Last Name:").grid(row=1, column=0)
+        last_name_entry = tk.Entry(add_window)
+        last_name_entry.grid(row=1, column=1)
+
+        tk.Label(add_window, text="DOB (MM/DD/YYYY):").grid(row=2, column=0)
+        dob_entry = tk.Entry(add_window)
+        dob_entry.grid(row=2, column=1)
+
+        tk.Label(add_window, text="Diagnosis:").grid(row=3, column=0)
+        diagnosis_entry = tk.Entry(add_window)
+        diagnosis_entry.grid(row=3, column=1)
+
+        tk.Label(add_window, text="Insurance:").grid(row=4, column=0)
+        insurance_entry = tk.Entry(add_window)
+        insurance_entry.grid(row=4, column=1)
+
+        def add_patient():
+            first_name = first_name_entry.get()
+            last_name = last_name_entry.get()
+            dob = dob_entry.get()
+            diagnosis = diagnosis_entry.get()
+            insurance = insurance_entry.get().lower()
+            visits = 1
+            amount_due = 20 if insurance == 'anthem' else 10 if insurance == 'medicare' else 60
+
+            id = self.patient_management.id_generator()
+            if not id:
+                messagebox.showerror('Error', 'Invalid amount of IDs available!')
+                return
+
+            patient = Patient(first_name, last_name, id, dob, diagnosis, insurance, visits)
+            self.patient_management.add_patient_data(patient)
+            messagebox.showinfo('Success', f'Patient {first_name} {last_name} added successfully with id of {id}!')
+            add_window.destroy()
+
+        ttk.Button(add_window, text="Add Patient", command=add_patient).grid(row=5, columnspan=2)
+    
+    def update_patient_data_window(self):
+        update_window = tk.Toplevel(self.root)
+        update_window.title("Update Patient Data")
+
+        tk.Label(update_window, text="Patient ID:").grid(row=0, column=0)
+        id_entry = tk.Entry(update_window)
+        id_entry.grid(row=0, column=1)
+
+        tk.Label(update_window, text="Field to Update:").grid(row=1, column=0)
+        field_entry = tk.Entry(update_window)
+        field_entry.grid(row=1, column=1)
+
+        tk.Label(update_window, text="New Value:").grid(row=2, column=0)
+        value_entry = tk.Entry(update_window)
+        value_entry.grid(row=2, column=1)
+
+        def update_patient():
+            id = int(id_entry.get())
+            field = field_entry.get().lower()
+            value = value_entry.get()
+            if self.patient_management.update_patient_data(id, field, value):
+                messagebox.showinfo('Success', f'Patient with ID {id} has been updated.')
+            else:
+                messagebox.showerror('Error', 'ID not in Database!')
+            update_window.destroy()
+
+        ttk.Button(update_window, text="Update Patient", command=update_patient).grid(row=3, columnspan=2)
+    
+    def record_patient_visit_window(self):
+        visit_window = tk.Toplevel(self.root)
+        visit_window.title("Add Patient Visit")
+
+        tk.Label(visit_window, text="Patient ID: ").grid(row=0, column=0)
+        id_entry = tk.Entry(visit_window)
+        id_entry.grid(row=0, column=1)
+
+        def record_patient_visit():
+            id = id_entry.get()
+            if self.patient_management.patient_visit(id):
+                messagebox.showinfo('Success', f'Patient with ID {id} has been updated.')
+            else:
+                messagebox.showerror('Error', f'ID {id} not in Database!')
+            visit_window.destroy()
+        ttk.Button(visit_window, text="Record Patient Visit", command=record_patient_visit).grid(row=2, columnspan=2)
+
+    def patient_pay_window(self):
+        pay_window = tk.Toplevel(self.root)
+        pay_window.title("Patient Payment")
+
+        tk.Label(pay_window, text="Patient ID: ").grid(row=0, column=0)
+        id_entry = tk.Entry(pay_window)
+        id_entry.grid(row=0, column=1)
+
+        tk.Label(pay_window, text="Amount Paid: ").grid(row=1, column=0)
+        payment_entry = tk.Entry(pay_window)
+        payment_entry.grid(row=1, column=1)
+
+        def patient_pay():
+            id = id_entry.get()
+            payment = float(payment_entry.get())
+            if self.patient_management.patient_payment(id, payment):
+                messagebox.showinfo('Success', f'Patient with ID {id} has been updated.')
+            else:
+                messagebox.showerror('Error', f'ID {id} not in Database!')
+            pay_window.destroy()
+
+        ttk.Button(pay_window, text="Payment for ID", command=patient_pay).grid(row=2, columnspan=2)
         
-    def remove_patient_data(self):
-        id = simpledialog.askstring("Input", "What is the Patients ID?")
-        if not id:
-            return
-        if self.patient_management.remove_patient(id):
-            messagebox.showinfo("Success", f"Patient with ID {id} has been removed.")
-        else:
-            messagebox.showerror("Error", f"ID {id} was not found in database!")
+    def remove_patient_data_window(self):
+        remove_window = tk.Toplevel(self.root)
+        remove_window.title("Remove Patient From Database")
+
+        tk.Label(remove_window, text="Patient ID to remove: ").grid(row=0, column=0)
+        id_entry = tk.Entry(remove_window)
+        id_entry.grid(row=0, column=1)
+
+        def remove_patient_data():
+            id = id_entry.get()
+            if self.patient_management.remove_patient(id):
+                messagebox.showinfo("Success", f"Patient with ID {id} has been removed.")
+            else:
+                messagebox.showerror("Error", f"ID {id} was not found in database!")
+            remove_window.destroy()
+        
+        ttk.Button(remove_window, text="Remove Patient", command=remove_patient_data).grid(row=2, columnspan=2)
     
     
     
