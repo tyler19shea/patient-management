@@ -13,13 +13,13 @@ class PatientManagement:
             self.conn.execute("""
                 CREATE TABLE IF NOT EXISTS patients (
                     id INTEGER PRIMARY KEY,
-                    first_name TEXT NOT NULL,
-                    last_name TEXT NOT NULL,
+                    "first name" TEXT NOT NULL,
+                    "last name" TEXT NOT NULL,
                     DOB DATE NOT NULL,
                     diagnosis TEXT NOT NULL,
                     insurance TEXT NOT NULL,
                     visits INTEGER NOT NULL,
-                    amount_due REAL NOT NULL
+                    "amount due" REAL NOT NULL
                 )
             """)
 
@@ -55,14 +55,14 @@ class PatientManagement:
 
     def add_patient_data(self, patient):
         with self.conn:
-            self.conn.execute("INSERT INTO patients (first_name, last_name, id, DOB, diagnosis, insurance, visits, amount_due) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            self.conn.execute("INSERT INTO patients (\"first name\", \"last name\", id, DOB, diagnosis, insurance, visits, \"amount due\") VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                               (patient.first_name, patient.last_name, patient.id, patient.birthday, patient.diagnosis, patient.insurance, patient.visits, patient.amount_due))
 
     def update_patient_data(self, id, update_item, update_value):
         with self.conn:
             cursor = self.conn.execute("SELECT id FROM patients WHERE id=?", (id,))
             if cursor.fetchone():
-                self.conn.execute(f"UPDATE patients SET {update_item} = ? WHERE id = ?", (update_value, id))
+                self.conn.execute(f"UPDATE patients SET \"{update_item}\" = ? WHERE id = ?", (update_value, id))
                 return True
             else:
                 return False
@@ -83,7 +83,7 @@ class PatientManagement:
             if row:
                 patient = Patient(row[1], row[0], row[2], row[3], row[4], row[5], row[6])
                 patient.visit_increase()
-                self.conn.execute("UPDATE patients SET visits = ?, amount_due = ? WHERE id = ?", 
+                self.conn.execute("UPDATE patients SET visits = ?, \"amount due\" = ? WHERE id = ?", 
                                   (patient.visits, patient.amount_due, id))
                 return True
             else:
@@ -93,7 +93,7 @@ class PatientManagement:
         row = self.get_patient_data(id)
         if row:
             updated_amount = row[-1] - amount_paid
-            self.conn.execute("UPDATE patients SET amount_due = ? WHERE id = ?", 
+            self.conn.execute("UPDATE patients SET \"amount due\" = ? WHERE id = ?", 
                             (updated_amount, id))
             return True
         else:
@@ -107,5 +107,3 @@ class PatientManagement:
                 return True
             else:
                 return False           
-
-

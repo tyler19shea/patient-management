@@ -30,7 +30,7 @@ class PatientManagementGUI:
         display_window.title("Patients Data")
 
         if data:
-            cols = ("ID", "First Name", "Last Name", "DOB", "Diagnosis", "Insurance", "Visits", "Amount Due")
+            cols = self.patient_management.display_headers()
             tree = ttk.Treeview(display_window, columns=cols, show='headings')
             for col in cols:
                 tree.heading(col, text=col)
@@ -56,7 +56,7 @@ class PatientManagementGUI:
                 if data:
                     result_window = tk.Toplevel(single_patient_window)
                     result_window.title(f"Patient Data for {id}")
-                    cols = ("ID", "First Name", "Last Name", "DOB", "Diagnosis", "Insurance", "Visits", "Amount Due")
+                    cols = self.patient_management.display_headers()
                     tree = ttk.Treeview(result_window, columns=cols, show='headings')
                     for col in cols:
                         tree.heading(col, text=col)
@@ -64,7 +64,7 @@ class PatientManagementGUI:
                     tree.insert("", "end", values=data)
                     tree.pack(fill=tk.BOTH, expand=True)
                 else:
-                    messagebox.showinfo("Patient Data", f"No data found for {id}")
+                    messagebox.showerror("Error", f"No data found for {id}")
             else:
                 messagebox.showerror("Error", f"{id} not found in database.")
 
